@@ -272,13 +272,6 @@ fun Navigation() {
                             viewModel = hiltViewModel()
                         )
                     }
-                    composable(Screen.EditProfile.route) {
-                        EditProfileScreen(
-                            navController = navController,
-                            mainViewModel = mainViewModel,
-                            viewModel = hiltViewModel()
-                        )
-                    }
                     composable(
                         route = Screen.Artist.route,
                         arguments = listOf(navArgument("artistId") { type = NavType.LongType })
