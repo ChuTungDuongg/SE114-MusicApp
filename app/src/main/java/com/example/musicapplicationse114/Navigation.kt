@@ -258,7 +258,8 @@ fun Navigation() {
                             mainViewModel = mainViewModel,
                             homeViewModel = hiltViewModel(),
                             playlistViewModel = hiltViewModel(),
-                            artistsFollowingViewModel = hiltViewModel()
+                            artistsFollowingViewModel = hiltViewModel(),
+                            profileViewModel = hiltViewModel()
                         )
                     }
                     composable(Screen.EditProfile.route) {

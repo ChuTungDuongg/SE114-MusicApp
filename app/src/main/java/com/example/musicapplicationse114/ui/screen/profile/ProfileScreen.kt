@@ -39,6 +39,9 @@ import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewM
 import com.example.musicapplicationse114.ui.screen.home.HomeViewModel
 import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
 import com.example.musicapplicationse114.auth.TokenManager
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.musicapplicationse114.ui.screen.profile.ProfileViewModel
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ProfileScreen(
@@ -46,11 +49,13 @@ fun ProfileScreen(
     mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel,
     playlistViewModel: PlayListViewModel,
-    artistsFollowingViewModel: ArtistsFollowingViewModel
+    artistsFollowingViewModel: ArtistsFollowingViewModel,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
         val homeState by homeViewModel.uiState.collectAsState()
         val playlistState by playlistViewModel.uiState.collectAsState()
         val artistState by artistsFollowingViewModel.uiState.collectAsState()
+        val profileState by profileViewModel.uiState.collectAsState()
 
         val currentBackStackEntry = navController.currentBackStackEntry
         val reloadProfile = currentBackStackEntry?.savedStateHandle?.get<Boolean>("reloadProfile") ?: false
@@ -58,12 +63,14 @@ fun ProfileScreen(
         LaunchedEffect(reloadProfile) {
             if (reloadProfile) {
                 homeViewModel.updateUserName()
+                profileViewModel.loadProfile()
                 currentBackStackEntry?.savedStateHandle?.set("reloadProfile", false)
             }
         }
 
         LaunchedEffect(Unit) {
             homeViewModel.updateUserName()
+            profileViewModel.loadProfile()
             homeViewModel.loadFavoriteSong()
             playlistViewModel.loadPlaylist()
             artistsFollowingViewModel.loadFollowedArtists()
@@ -140,10 +147,14 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Personal info rows
-                ProfileInfoRow(label = "Email", value = "jim_logan01@gmail.com")
-                ProfileInfoRow(label = "Phone Number", value = "8844662200")
-                ProfileInfoRow(label = "Birthday", value = "March 14, 1997")
-                ProfileInfoRow(label = "Gender", value = "Male")
+                ProfileInfoRow(label = "Email", value = profileState.email)
+                ProfileInfoRow(label = "Phone Number", value = profileState.phone)
+                if (profileState.birthday.isNotBlank()) {
+                    ProfileInfoRow(label = "Birthday", value = profileState.birthday)
+                }
+                if (profileState.gender.isNotBlank()) {
+                    ProfileInfoRow(label = "Gender", value = profileState.gender)
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -254,7 +265,8 @@ fun PreviewProfileScreen() {
             mainViewModel = MainViewModel(),
             homeViewModel = HomeViewModel(api = null, mainLog = null, tokenManager = null),
             playlistViewModel = PlayListViewModel(api = null, tokenManager = TokenManager(androidx.compose.ui.platform.LocalContext.current)),
-            artistsFollowingViewModel = ArtistsFollowingViewModel(api = null, tokenManager = null)
+            artistsFollowingViewModel = ArtistsFollowingViewModel(api = null, tokenManager = null),
+            profileViewModel = ProfileViewModel(api = null, tokenManager = null)
         )
     }
 }
