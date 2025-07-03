@@ -88,7 +88,7 @@ fun ProfileScreen(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color.DarkGray)
-                            .clickable { /* Edit action */ }
+                            .clickable { navController.navigate("editProfile") }
                             .padding(horizontal = 20.dp, vertical = 10.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
