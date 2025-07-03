@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+// Support both legacy '/users' paths and new '/api/users' paths
+@RequestMapping({"/users", "/api/users"})
 public class UserController {
 
     private final UserService userService;
@@ -62,6 +63,19 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to fetch profile");
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            UserDetailDTO detail = userService.getCurrentUserDetails();
+            return ResponseEntity.ok(detail);
+        } catch (UsernameNotFoundException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to fetch current user");
         }
     }
 
