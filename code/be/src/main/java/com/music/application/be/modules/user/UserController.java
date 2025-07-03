@@ -92,10 +92,10 @@ public class UserController {
 
     @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateMyProfile(
-            @RequestPart("profile") String profileJson,
-            @RequestPart(value = "avatarFile", required = false) MultipartFile avatarFile) {
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatarFile) {
         try {
-            UserUpdateDTO userDTO = objectMapper.readValue(profileJson, UserUpdateDTO.class);
+            UserUpdateDTO userDTO = objectMapper.readValue(userJson, UserUpdateDTO.class);
             UserDetailDTO updated = userService.updateCurrentUser(userDTO, avatarFile);
             return ResponseEntity.ok(updated);
         } catch (EntityNotFoundException e) {
