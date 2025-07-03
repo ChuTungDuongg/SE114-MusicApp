@@ -28,6 +28,24 @@ class EditProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(EditProfileState())
     val uiState = _uiState.asStateFlow()
 
+    fun loadCurrentUser() {
+        viewModelScope.launch {
+            val token = tokenManager?.getToken()
+            if (api != null && !token.isNullOrBlank()) {
+                val result = api.getCurrentUser(token)
+                if (result.isSuccessful) {
+                    val user = result.body()
+                    _uiState.value = _uiState.value.copy(
+                        username = user?.username ?: "",
+                        email = user?.email ?: "",
+                        phone = user?.phone ?: "",
+                        avatar = user?.avatar ?: ""
+                    )
+                }
+            }
+        }
+    }
+
     fun updateUsername(username: String) {
         _uiState.value = _uiState.value.copy(username = username)
     }
@@ -54,7 +72,8 @@ class EditProfileViewModel @Inject constructor(
                         _uiState.value.username,
                         _uiState.value.email,
                         _uiState.value.phone,
-                        _uiState.value.avatar
+                        // _uiState.value.avatar
+                        null
                     ))
                     if (result.isSuccessful) {
                         tokenManager?.saveUserName(_uiState.value.username)

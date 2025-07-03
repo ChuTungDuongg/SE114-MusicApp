@@ -34,12 +34,16 @@ fun EditProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadCurrentUser()
+    }
     LaunchedEffect(uiState.status) {
         if (uiState.status is LoadStatus.Success) {
             navController.previousBackStackEntry?.savedStateHandle?.set("reloadProfile", true)
-            navController.navigate("profile") {
-                popUpTo("editProfile") { inclusive = true }
-            }
+            // navController.navigate("profile") {
+            //     popUpTo("editProfile") { inclusive = true }
+            // }
+            navController.popBackStack()
         }
     }
 

@@ -42,6 +42,8 @@ import com.example.musicapplicationse114.auth.TokenManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicapplicationse114.ui.screen.profile.ProfileViewModel
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.AsyncImage
+
 
 @Composable
 fun ProfileScreen(
@@ -58,21 +60,24 @@ fun ProfileScreen(
         val profileState by profileViewModel.uiState.collectAsState()
 
         val currentBackStackEntry = navController.currentBackStackEntry
-        val reloadProfile = currentBackStackEntry?.savedStateHandle?.get<Boolean>("reloadProfile") ?: false
+        val shouldReload = currentBackStackEntry?.savedStateHandle?.get<Boolean>("reloadProfile") ?: false
 
-        LaunchedEffect(reloadProfile) {
-            if (reloadProfile) {
-                homeViewModel.updateUserName()
+        LaunchedEffect(shouldReload) {
+            if (shouldReload) {
                 profileViewModel.loadProfile()
-                currentBackStackEntry?.savedStateHandle?.set("reloadProfile", false)
+                homeViewModel.updateUserName()
+                // currentBackStackEntry?.savedStateHandle?.set("reloadProfile", false)
+                currentBackStackEntry.savedStateHandle.remove<Boolean>("reloadProfile")
             }
         }
         LaunchedEffect(Unit) {
+            profileViewModel.loadProfile()
             homeViewModel.updateUserName()
             homeViewModel.loadFavoriteSong()
             playlistViewModel.loadPlaylist()
             artistsFollowingViewModel.loadFollowedArtists()
         }
+
     Scaffold(
         containerColor = Color.Black,
     ) { innerPadding ->
@@ -125,9 +130,20 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
-                    painter = painterResource(id = R.drawable.logan),
-                    contentDescription = null,
+                // Image(
+                //     painter = painterResource(id = R.drawable.logan),
+                //     contentDescription = null,
+                //     modifier = Modifier
+                //         .size(100.dp)
+                //         .clip(CircleShape),
+                //     contentScale = ContentScale.Crop
+                // )
+
+                AsyncImage(
+                    model = profileState.user?.avatar,
+                    contentDescription = "User Avatar",
+                    placeholder = painterResource(id = R.drawable.logan),
+                    error = painterResource(id = R.drawable.logan),     
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape),
@@ -136,7 +152,8 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    homeState.username,
+                    // homeState.username,
+                    profileState.user?.username ?: "Loading...",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
@@ -145,14 +162,14 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Personal info rows
-                ProfileInfoRow(label = "Email", value = profileState.email)
-                ProfileInfoRow(label = "Phone Number", value = profileState.phone)
-                if (profileState.birthday.isNotBlank()) {
-                    ProfileInfoRow(label = "Birthday", value = profileState.birthday)
-                }
-                if (profileState.gender.isNotBlank()) {
-                    ProfileInfoRow(label = "Gender", value = profileState.gender)
-                }
+                ProfileInfoRow(label = "Email", value = profileState.user?.email ?: "...")
+                ProfileInfoRow(label = "Phone Number", value = profileState.user?.phone ?: "...")
+                // if (profileState.birthday.isNotBlank()) {
+                //     ProfileInfoRow(label = "Birthday", value = profileState.birthday)
+                // }
+                // if (profileState.gender.isNotBlank()) {
+                //     ProfileInfoRow(label = "Gender", value = profileState.gender)
+                // }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
