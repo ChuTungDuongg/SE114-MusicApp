@@ -49,3 +49,9 @@ Hướng đi :
 
 - Deadline là 29/6.
 
+
+## Hướng dẫn chạy Backend
+
+1. Copy file `code/be/src/main/resources/env.properties.example` thành `env.properties` và cập nhật các giá trị thích hợp.
+2. Mở terminal tại thư mục `code/be` và chạy `./gradlew bootRun`.
+
