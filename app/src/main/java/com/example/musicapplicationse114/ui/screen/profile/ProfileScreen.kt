@@ -16,6 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,27 +30,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.musicapplicationse114.MainViewModel
 import com.example.musicapplicationse114.R
+import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewModel
+import com.example.musicapplicationse114.ui.screen.home.HomeViewModel
+import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
+import com.example.musicapplicationse114.auth.TokenManager
 import com.example.musicapplicationse114.ui.theme.MusicApplicationSE114Theme
 
 @Composable
 fun ProfileScreen(
-    navController: androidx.navigation.NavController,
-    mainViewModel: MainViewModel
+    navController: NavController,
+    mainViewModel: MainViewModel,
+    homeViewModel: HomeViewModel,
+    playlistViewModel: PlayListViewModel,
+    artistsFollowingViewModel: ArtistsFollowingViewModel
 ) {
+    val homeState by homeViewModel.uiState.collectAsState()
+    val playlistState by playlistViewModel.uiState.collectAsState()
+    val artistState by artistsFollowingViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        homeViewModel.updateUserName()
+        homeViewModel.loadFavoriteSong()
+        playlistViewModel.loadPlaylist()
+        artistsFollowingViewModel.loadFollowedArtists()
+    }
     Scaffold(
         containerColor = Color.Black,
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Transparent)
-            ) {
-//                NavigationBar(navController = navController) { }
-            }
-        }
     ) { innerPadding ->
         // LazyColumn with enough bottom padding to avoid NavBar overlap
         LazyColumn(
@@ -109,7 +121,7 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    "Logan Jimmy",
+                    homeState.username,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
@@ -132,9 +144,21 @@ fun ProfileScreen(
                         .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    ProfileStatBox(icon = Icons.Default.Favorite, value = "120", label = "songs")
-                    ProfileStatBox(icon = Icons.Default.QueueMusic, value = "12", label = "playlists")
-                    ProfileStatBox(icon = Icons.Default.Group, value = "3", label = "artists")
+                    ProfileStatBox(
+                        icon = Icons.Default.Favorite,
+                        value = homeState.likeCount.toString(),
+                        label = "songs"
+                    )
+                    ProfileStatBox(
+                        icon = Icons.Default.QueueMusic,
+                        value = playlistState.playlistCount.toString(),
+                        label = "playlists"
+                    )
+                    ProfileStatBox(
+                        icon = Icons.Default.Group,
+                        value = artistState.followCount.toString(),
+                        label = "artists"
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -217,7 +241,10 @@ fun PreviewProfileScreen() {
     MusicApplicationSE114Theme(darkTheme = true) {
         ProfileScreen(
             navController = rememberNavController(),
-            mainViewModel = MainViewModel()
+            mainViewModel = MainViewModel(),
+            homeViewModel = HomeViewModel(api = null, mainLog = null, tokenManager = null),
+            playlistViewModel = PlayListViewModel(api = null, tokenManager = TokenManager(androidx.compose.ui.platform.LocalContext.current)),
+            artistsFollowingViewModel = ArtistsFollowingViewModel(api = null, tokenManager = null)
         )
     }
 }
