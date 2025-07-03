@@ -60,6 +60,8 @@ import com.example.musicapplicationse114.ui.screen.profile.ProfileScreen
 import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
 import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewModel
 
+
+
 sealed class Screen(val route: String, val title: String) {
     object Home : Screen("home", "Home")
     object Login : Screen("login", "Login")
@@ -259,7 +261,15 @@ fun Navigation() {
                             mainViewModel = mainViewModel,
                             homeViewModel = hiltViewModel(),
                             playlistViewModel = hiltViewModel(),
-                            artistsFollowingViewModel = hiltViewModel()
+                            artistsFollowingViewModel = hiltViewModel(),
+                            profileViewModel = hiltViewModel()
+                        )
+                    }
+                    composable(Screen.EditProfile.route) {
+                        EditProfileScreen(
+                            navController = navController,
+                            mainViewModel = mainViewModel,
+                            viewModel = hiltViewModel()
                         )
                     }
                     composable(Screen.EditProfile.route) {

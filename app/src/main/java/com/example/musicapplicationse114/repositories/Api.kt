@@ -58,6 +58,11 @@ interface Api {
         @Body request: UserUpdateRequest
     ): Response<UserResponse>
 
+    @GET("/api/users/me")
+    suspend fun getCurrentUser(
+        @Header("Authorization") token: String
+    ): Response<UserResponse>
+
     //album
     @GET("api/albums")
     suspend fun getAlbums(
