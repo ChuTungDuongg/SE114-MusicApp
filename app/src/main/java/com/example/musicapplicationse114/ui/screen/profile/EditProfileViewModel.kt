@@ -6,6 +6,9 @@ import com.example.musicapplicationse114.common.enum.LoadStatus
 import com.example.musicapplicationse114.model.UserUpdateRequest
 import com.example.musicapplicationse114.repositories.Api
 import com.example.musicapplicationse114.auth.TokenManager
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,13 +71,15 @@ class EditProfileViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
                 val token = tokenManager?.getToken()
                 if (api != null && !token.isNullOrBlank()) {
-                    val result = api.updateProfile(token, UserUpdateRequest(
+                    val profile = UserUpdateRequest(
                         _uiState.value.username,
                         _uiState.value.email,
                         _uiState.value.phone,
-                        // _uiState.value.avatar
                         null
-                    ))
+                    )
+                    val json = Gson().toJson(profile)
+                    val profileBody = json.toRequestBody("application/json".toMediaType())
+                    val result = api.updateMyProfile(token, profileBody, null)
                     if (result.isSuccessful) {
                         tokenManager?.saveUserName(_uiState.value.username)
                         _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
