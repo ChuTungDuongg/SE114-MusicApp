@@ -68,6 +68,19 @@ public class UserService {
         );
     }
 
+    public UserDetailDTO getCurrentUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof User currentUser)) {
+            throw new UsernameNotFoundException("User not authenticated");
+        }
+
+        User fullUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return convertToDetailDTO(fullUser);
+    }
+
     @CacheEvict(value = {"allUsers", "followedArtists", "searchedFollowedArtists"}, allEntries = true)
     public UserDetailDTO updateCurrentUser(UserUpdateDTO userDTO, MultipartFile avatarFile) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
