@@ -45,6 +45,8 @@ import com.example.musicapplicationse114.ui.screen.library.LibraryScreen
 import com.example.musicapplicationse114.ui.screen.likedsongs.LikedSongsScreen
 import com.example.musicapplicationse114.ui.screen.login.LoginScreen
 import com.example.musicapplicationse114.ui.screen.profile.ProfileScreen
+import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
+import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewModel
 import com.example.musicapplicationse114.ui.screen.login.LoginViewModel
 import com.example.musicapplicationse114.ui.screen.playListSongs.PlayListSongsScreen
 import com.example.musicapplicationse114.ui.screen.player.MiniPlayer
@@ -252,7 +254,10 @@ fun Navigation() {
                     composable(Screen.Profile.route) {
                         ProfileScreen(
                             navController = navController,
-                            mainViewModel = mainViewModel
+                            mainViewModel = mainViewModel,
+                            homeViewModel = hiltViewModel(),
+                            playlistViewModel = hiltViewModel(),
+                            artistsFollowingViewModel = hiltViewModel()
                         )
                     }
                     composable(
@@ -350,6 +355,7 @@ fun Navigation() {
                                         Screen.Library.route,
                                         Screen.Playlist.route,
                                         Screen.PlaylistSongs.route,
+                                        Screen.Profile.route,
                                         "home?username={username}&timeOfDay={timeOfDay}")) {
                 Column {
                     if (playerState.currentSong != null && !mainViewModel.isFullScreenPlayer.value) {
