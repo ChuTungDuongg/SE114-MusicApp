@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.SavedSearch
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,6 +54,9 @@ import com.example.musicapplicationse114.ui.screen.start.StartScreen
 import com.example.musicapplicationse114.ui.searchSongAddInToPlaylist.SearchSongAddIntoPlaylistScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.example.musicapplicationse114.ui.screen.profile.ProfileScreen
+import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
+import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewModel
 
 sealed class Screen(val route: String, val title: String) {
     object Home : Screen("home", "Home")
@@ -252,7 +253,10 @@ fun Navigation() {
                     composable(Screen.Profile.route) {
                         ProfileScreen(
                             navController = navController,
-                            mainViewModel = mainViewModel
+                            mainViewModel = mainViewModel,
+                            homeViewModel = hiltViewModel(),
+                            playlistViewModel = hiltViewModel(),
+                            artistsFollowingViewModel = hiltViewModel()
                         )
                     }
                     composable(
@@ -350,6 +354,7 @@ fun Navigation() {
                                         Screen.Library.route,
                                         Screen.Playlist.route,
                                         Screen.PlaylistSongs.route,
+                                        Screen.Profile.route,
                                         "home?username={username}&timeOfDay={timeOfDay}")) {
                 Column {
                     if (playerState.currentSong != null && !mainViewModel.isFullScreenPlayer.value) {
