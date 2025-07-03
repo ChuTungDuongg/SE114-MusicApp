@@ -355,6 +355,7 @@ fun Navigation() {
                                         Screen.Library.route,
                                         Screen.Playlist.route,
                                         Screen.PlaylistSongs.route,
+                                        Screen.Profile.route,
                                         "home?username={username}&timeOfDay={timeOfDay}")) {
                 Column {
                     if (playerState.currentSong != null && !mainViewModel.isFullScreenPlayer.value) {
