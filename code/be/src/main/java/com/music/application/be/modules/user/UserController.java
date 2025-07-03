@@ -66,6 +66,19 @@ public class UserController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            UserDetailDTO detail = userService.getCurrentUserDetails();
+            return ResponseEntity.ok(detail);
+        } catch (UsernameNotFoundException | EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to fetch current user");
+        }
+    }
+
 
     @Operation(
             summary = "Update user with optional avatar",
