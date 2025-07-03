@@ -55,6 +55,7 @@ import com.example.musicapplicationse114.ui.screen.start.StartScreen
 import com.example.musicapplicationse114.ui.searchSongAddInToPlaylist.SearchSongAddIntoPlaylistScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.example.musicapplicationse114.ui.screen.profile.EditProfileScreen
 import com.example.musicapplicationse114.ui.screen.profile.ProfileScreen
 import com.example.musicapplicationse114.ui.screen.playlists.PlayListViewModel
 import com.example.musicapplicationse114.ui.screen.artists.ArtistsFollowingViewModel

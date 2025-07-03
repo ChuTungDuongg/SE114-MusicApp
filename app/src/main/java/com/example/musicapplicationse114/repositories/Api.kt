@@ -58,7 +58,6 @@ interface Api {
         @Body request: UserUpdateRequest
     ): Response<UserResponse>
 
-
     //album
     @GET("api/albums")
     suspend fun getAlbums(
