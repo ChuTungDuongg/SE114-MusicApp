@@ -4,7 +4,7 @@ import androidx.compose.ui.semantics.Role
 
 data class UserResponse(
     val id: Long,
-    val role: Role,
+    val role: String,
     val username: String,
     val email: String,
     val phone: String,
@@ -12,4 +12,3 @@ data class UserResponse(
    // val birthday: String? = null,
    // val gender: String? = null
 )
-

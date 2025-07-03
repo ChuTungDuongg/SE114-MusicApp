@@ -172,6 +172,17 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel, mainV
                 Spacer(modifier = Modifier.height(20.dp))
 
                 TextField(
+                    value = state.value.phone,
+                    onValueChange = { viewModel.updatePhone(it) },
+                    label = { Text("Phone") },
+                    leadingIcon = { Icon(Icons.Filled.Phone, contentDescription = null) },
+                    modifier = Modifier
+                        .shadow(25.dp, shape = RoundedCornerShape(20.dp),)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                TextField(
                     value = state.value.password, onValueChange = {viewModel.updatePassword(it)},
                     label = {Text("Password")},
                     visualTransformation = if(state.value.isShowPassword) VisualTransformation.None

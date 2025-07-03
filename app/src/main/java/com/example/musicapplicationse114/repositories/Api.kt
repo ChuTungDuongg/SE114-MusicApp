@@ -27,6 +27,8 @@ import com.example.musicapplicationse114.model.UserLoginRequest
 import com.example.musicapplicationse114.model.UserSignUpRequest
 import com.example.musicapplicationse114.model.UserUpdateRequest
 import com.example.musicapplicationse114.model.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -52,15 +54,28 @@ interface Api {
     @POST("/register")
     suspend fun register(@Body request: UserSignUpRequest): Response<AuthenticationResponse>
 
-    @PUT("/api/users/me")
-    suspend fun updateProfile(
-        @Header("Authorization") token: String,
-        @Body request: UserUpdateRequest
-    ): Response<UserResponse>
+    // @PUT("/api/users/me")
+    // suspend fun updateProfile(
+    //     @Header("Authorization") token: String,
+    //     @Body request: UserUpdateRequest
+    // ): Response<UserResponse>
+    //
+    // @GET("/api/users/me")
+    // suspend fun getCurrentUser(
+    //     @Header("Authorization") token: String
+    // ): Response<UserResponse>
 
-    @GET("/api/users/me")
+    @GET("users/me/profile") 
     suspend fun getCurrentUser(
         @Header("Authorization") token: String
+    ): Response<UserResponse> // Dùng UserResponse vì nó có đủ các trường cơ bản
+
+    @Multipart
+    @PUT("users/me")
+    suspend fun updateMyProfile(
+        @Header("Authorization") token: String,
+        @Part("profile") profile: RequestBody,
+        @Part avatarFile: MultipartBody.Part?
     ): Response<UserResponse>
 
     //album

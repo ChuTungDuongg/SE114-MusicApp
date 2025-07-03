@@ -17,6 +17,7 @@ import javax.inject.Inject
 data class SignUpUiState(
     val username: String = "",
     val email: String = "",
+    val phone: String "",
     val password: String = "",
     val successMessage: String = "",
     val confirmPassword: String = "",
@@ -41,6 +42,10 @@ class SignUpViewModel @Inject constructor(
     {
         _uiState.value = _uiState.value.copy(email = email)
 
+    }
+
+    fun updatePhone(phone: String) {
+        _uiState.value = _uiState.value.copy(phone = phone)
     }
 
     fun updatePassword(password: String)
@@ -78,7 +83,7 @@ class SignUpViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
         viewModelScope.launch {
             try {
-                val result = api?.register(UserSignUpRequest(_uiState.value.username, _uiState.value.password, _uiState.value.email,_uiState.value.email, "SSG11gjh", role = Role.USER.name))
+                val result = api?.register(UserSignUpRequest(_uiState.value.username, _uiState.value.password, _uiState.value.email,_uiState.value.phone, "SSG11gjh", role = Role.USER.name))
                 if(result != null && result.isSuccessful){
                     val accessToken = result.body()?.access_token
                     if(accessToken != null){
