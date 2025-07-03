@@ -52,6 +52,16 @@ fun ProfileScreen(
         val playlistState by playlistViewModel.uiState.collectAsState()
         val artistState by artistsFollowingViewModel.uiState.collectAsState()
 
+        val currentBackStackEntry = navController.currentBackStackEntry
+        val reloadProfile = currentBackStackEntry?.savedStateHandle?.get<Boolean>("reloadProfile") ?: false
+
+        LaunchedEffect(reloadProfile) {
+            if (reloadProfile) {
+                homeViewModel.updateUserName()
+                currentBackStackEntry?.savedStateHandle?.set("reloadProfile", false)
+            }
+        }
+
         LaunchedEffect(Unit) {
             homeViewModel.updateUserName()
             homeViewModel.loadFavoriteSong()

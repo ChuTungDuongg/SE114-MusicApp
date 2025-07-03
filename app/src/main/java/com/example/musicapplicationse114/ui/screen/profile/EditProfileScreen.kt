@@ -36,6 +36,7 @@ fun EditProfileScreen(
 
     LaunchedEffect(uiState.status) {
         if (uiState.status is LoadStatus.Success) {
+            navController.previousBackStackEntry?.savedStateHandle?.set("reloadProfile", true)
             navController.navigate("profile") {
                 popUpTo("editProfile") { inclusive = true }
             }
