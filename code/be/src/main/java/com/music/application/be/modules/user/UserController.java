@@ -24,7 +24,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+// Support both legacy '/users' paths and new '/api/users' paths
+@RequestMapping({"/users", "/api/users"})
 public class UserController {
 
     private final UserService userService;
