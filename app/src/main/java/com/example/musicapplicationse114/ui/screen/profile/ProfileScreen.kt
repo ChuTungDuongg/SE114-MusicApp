@@ -161,22 +161,25 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ProfileStatBox(
                         icon = Icons.Default.Favorite,
                         value = homeState.likeCount.toString(),
-                        label = "songs"
+                        label = "songs",
+                        modifier = Modifier.weight(1f)
                     )
                     ProfileStatBox(
                         icon = Icons.Default.QueueMusic,
                         value = playlistState.playlistCount.toString(),
-                        label = "playlists"
+                        label = "playlists",
+                        modifier = Modifier.weight(1f)
                     )
                     ProfileStatBox(
                         icon = Icons.Default.Group,
                         value = artistState.followCount.toString(),
-                        label = "artists"
+                        label = "artists",
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
@@ -208,13 +211,13 @@ fun ProfileScreen(
 fun ProfileStatBox(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     value: String,
-    label: String
+    label: String,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(Color(0xFF1A1A1A), RoundedCornerShape(12.dp))
-            .padding(12.dp)
-            .width(90.dp),
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
